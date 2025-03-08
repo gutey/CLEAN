@@ -16,7 +16,7 @@ To set up the project and install the required dependencies, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/eeg_artifact_removal.git
+   git clone https://github.com/gutey/CLEAN.git
    cd CLEAN
    ```
 
@@ -44,3 +44,7 @@ To run the model, follow these steps:
    ```bash
    python evaluation/inference.py --model checkpoint.pth --test_data test_data/
    ```
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
