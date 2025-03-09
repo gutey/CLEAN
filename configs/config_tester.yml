@@ -1,0 +1,49 @@
+
+model_name: cleegn_tuh
+model_class: UPT4EEG
+save_path: null
+
+Hyperparameters:
+  epochs: 50
+  d_model: 384
+  dim: 192
+  num_heads: 4
+  depth: 3
+  batch_size: 32
+  lr: !!float 1e-4
+  optim_weight_decay: 0.05
+  linear_decay_end: !!float 1e-10
+  warmup_perc: 0.07
+
+Dataset:
+  dataset: TUH
+  shuffle: true
+  x_basepath: ./data/original
+  y_basepath: ./data/ICA
+  x_fpath: Data_S{}.set
+  y_fpath: Data_S{}_ICA.set
+  use_montage: 'tuh'   #'tuh', 'random' or 'no_montage'
+  use_montage_val: 'tuh'
+  io_same: True
+  input_chs: 20
+  output_chs: 25
+  num_inputs: 2600
+  num_outputs: 3600
+  ch_dropout: 0.6
+  sfreq: 250.0
+  window_size: 1
+  stride: 1
+  n_chan: null
+  normalize: False
+  subjects_train:
+    - ["001"]
+  subjects_val:
+    - ["010"]
+  subjects_test:
+    - ["016"]
+  ch_names: null
+  tmin: 200
+  tmax: max
+
+
+  
