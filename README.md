@@ -61,24 +61,28 @@ To prepare the data for training and evaluation, follow these steps:
 
 To run the model, follow these steps:
 
-1. **Adjust the config file**: [config.yml](https://github.com/gutey/CLEAN/blob/main/configs/config.yml)
-2. **Train the model**:
+1. **Adjust the config file** [config.yml](https://github.com/gutey/CLEAN/blob/main/configs/config.yml):
+   If necessary, adjust the data path, the data subjects, input montage configurations and hyperparameters
+3. **Train the model**:
    To train the model, use the following command:
    ```bash
    export PYTHONPATH=$(pwd)
    python CLEAN/main.py -c configs/config.yml -s logs/TUH/CLEAN
    ```
-3. **Evaluate the model**:
+4. **Evaluate the model**:
    After training, you can evaluate the model using the following command:
    ```bash
-   python evaluation/inference.py --model checkpoint.pth --config configs/config.yml --use_montage random 
+   python CLEAN/evaluation/inference.py --model checkpoint.pth --config configs/config.yml --use_montage random 
    ```
    You can optionally specify the save path and model name by using:
    ```bash
-   python evaluation/inference.py --model checkpoint.pth --config configs/config.yml --use_montage random --save_path [path] --save_model_name [model_name]
+   python CLEAN/evaluation/inference.py --model checkpoint.pth --config configs/config.yml --use_montage random --save_path [path] --save_model_name [model_name]
    ```
-   
-   
+
+   **Note:** The `use_montage` argument can be set to one of the following options:
+   - `'tuh'`: Fixed TCP input montage
+   - `'tuh_rand'`: Random permutation of the channel order from the TCP montage
+   - `'random'`: Random bipolar channels generated from the reference channels
 
 
 ## 📄 License
