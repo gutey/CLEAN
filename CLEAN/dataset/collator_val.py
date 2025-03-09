@@ -1,3 +1,5 @@
+""" adapted from https://github.com/BenediktAlkin/upt-tutorial/blob/main/upt/collators/sparseimage_autoencoder_collator.py"""
+
 import torch
 from torch.utils.data import default_collate
 
