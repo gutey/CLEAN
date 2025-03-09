@@ -19,7 +19,7 @@ Dataset:
   dataset: TUH
   shuffle: true
   x_basepath: ./data/original
-  y_basepath: ./data/ICA
+  y_basepath: ./data/target
   x_fpath: Data_S{}.set
   y_fpath: Data_S{}_ICA.set
   use_montage: 'tuh'   #'tuh', 'random' or 'no_montage'
