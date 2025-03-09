@@ -61,7 +61,7 @@ To prepare the data for training and evaluation, follow these steps:
 
 To run the model, follow these steps:
 
-1. **Adjust config file**: [config.yml](https://github.com/gutey/CLEAN/blob/main/configs/config.yml)
+1. **Adjust the config file**: [config.yml](https://github.com/gutey/CLEAN/blob/main/configs/config.yml)
 2. **Train the model**:
    To train the model, use the following command:
    ```bash
