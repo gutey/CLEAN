@@ -40,12 +40,12 @@ print(f'CUDA_VISIBLE_DEVICES: {os.environ.get("CUDA_VISIBLE_DEVICES")}')
 parser = argparse.ArgumentParser(description="Main UPT4EEG training script.")
 
 # Define the argument
-parser.add_argument('config_file', type=str, help="Config file (.yml): relative path in working directory.")
+parser.add_argument('-c', '--config', type=str, help="Config file (.yml): relative path in working directory.")
 
 # Parse the arguments
 args = parser.parse_args()
 
-config_file = args.config_file
+config_file = args.config
 
 config_path = os.path.join(os.getcwd(), config_file)
 #config_path = '/system/user/studentwork/gutenber/configs/config.yml'
@@ -196,7 +196,7 @@ print(f"Output positions shape: {sample['output_pos'].shape}")
 
 def main_fn(train_dataset, val_dataset, config, device):
     load_checkpoint = False
-    model_path = None #'/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan19_18-47-03_val.pth'  #small model on tuh  #'/content/drive/My Drive/A_EEG/CLEEGN/logs/USZ/UPT4EEG/UPT4EEG_Dec11_11-42-17.pth'
+    model_path = None 
 
     use_wandb = True
     hyperparams = config['Hyperparameters']
@@ -221,14 +221,11 @@ def main_fn(train_dataset, val_dataset, config, device):
     model = CLEAN(
         encoder = Encoder(
             input_dim=input_dim,
-            # for EEG, we use ndim just for time pos encoding, time is 1D --> ndim = 1
             ndim=1,
             # d_model
             gnn_dim=d_model,
-            # ViT-T latent dimension
             enc_dim=dim,
             enc_num_heads=num_heads,
-            # ViT-T has 12 blocks -> parameters are split evenly among encoder/approximator/decoder
             enc_depth=depth,
             # the perceiver is optional, it changes the size of the latent space to NUM_LATENT_TOKENS tokens
             # perc_dim=dim,
@@ -237,15 +234,11 @@ def main_fn(train_dataset, val_dataset, config, device):
             mlp_pos_enc=use_mlp_posEnc,
         ),
         decoder=DecoderPerceiver(
-            # tell the decoder the dimension of the input (dim of approximator)
             input_dim=dim,
             output_dim=output_dim,
-            # images have 2D coordinates
             ndim=1,
-            # as in ViT-T
             dim=dim,
             num_heads=num_heads,
-            # ViT-T has 12 blocks -> parameters are split evenly among encoder/approximator/decoder
             depth=depth,
             mlp_pos_enc=use_mlp_posEnc,
         ),

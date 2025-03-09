@@ -5,8 +5,8 @@ epochs: 80
 
 Dataset:
   shuffle: true
-  x_basepath: /system/user/studentwork/gutenber/TUH_dataset_PROCESSED_new/original
-  y_basepath: /system/user/studentwork/gutenber/TUH_dataset_PROCESSED_new/ICA
+  x_basepath: ./data/original
+  y_basepath: ./data/ICA
   x_fpath: Data_S{}.set
   y_fpath: Data_S{}_ICA.set
   use_montage: 'tuh'   #'tuh', 'random' or 'no_montage'

@@ -41,37 +41,40 @@ from CLEAN.model.CLEAN import CLEAN
 parser = argparse.ArgumentParser(description="Inference script to generate eval metrics for UPT4EEG.")
 
 # Define the argument
-parser.add_argument('model_type', type=str, help="Which model to choose. Either: ['big_rand', 'small_tuh', 'small_tuh_same', 'small_rdm_same', 'small_rdm_cd', 'small_rd', 'CLEAN-E1', 'CLEAN-E2]")
-parser.add_argument('use_montage', type=str, help="Defines which montage to use in inference ('tuh', 'tuh_rand' or 'random').")
+parser.add_argument('--model', type=str, help="Path to .pth model")
+parser.add_argument('--config', type=str, help="Config path")
+parser.add_argument('--use_montage', type=str, help="Defines which montage to use in inference ('tuh', 'tuh_rand' or 'random').")
+parser.add_argument('--save_path', type=str, default='./logs/TUH/CLEAN', help="Save path")
+parser.add_argument('--save_model_name', type=str, help="The model name used for saving.", default='CLEAN')
 
 # Parse the arguments
 args = parser.parse_args()
 
-saved_model_type = args.model_type
+model_path = args.model
+config_path = args.config
 use_montage = args.use_montage
+saved_model_type = args.save_model_name
+SAVE_PATH = args.save_path
 
 DATASET = 'TUH'    # either 'TUH' or 'BCI' or 'DenoiseNet'
 MODEL_CLASS = 'UPT4EEG'
 plot_sample = False
 
-config_path = '/system/user/studentwork/gutenber/configs/config.yml'
-
 model_name = yaml.safe_load(Path(config_path).read_text())['model_name']
 cfg_dataset = yaml.safe_load(Path(config_path).read_text())['Dataset']
 cfg_general = yaml.safe_load(Path(config_path).read_text())
 
+d_model = 192*2
+dim = 192  
+num_heads = 4 #3
+depth = 3
 
 SFREQ      = cfg_dataset["sfreq"]
 normalize  = cfg_dataset["normalize"]
-#use_montage = cfg_dataset['use_montage']
-#use_montage = 'user_specific'
-#use_montage = 'tuh'
-#NUM_EPOCHS = 1 #cfg_general['epochs']
-#BATCH_SIZE = cfg_model['batch_size']
-#LR         = cfg_model["learning_rate"]
+window_size = cfg_dataset["window_size"]
+stride = cfg_dataset["stride"]
 
 
-SAVE_PATH = 'logs/' + DATASET + '/' + MODEL_CLASS
 
 if not os.path.exists(SAVE_PATH):
     try:
@@ -83,8 +86,6 @@ if not os.path.exists(SAVE_PATH):
 timestamp = datetime.now().strftime("%b%d_%H-%M-%S")
 
 
-window_size = 1
-stride = 0.5
 
 df_met_per_sub = pd.DataFrame()
 mse_list_total = []
@@ -108,136 +109,7 @@ for subject in cfg_dataset["subjects_test"]:
     y_test = np2TT(y_test)
 
 
-    #model_path = '/system/user/studentwork/gutenber/upt-minimal/logs/TUH/UPT4EEG/UPT4EEG_Jan02_14-31-42_train.pth' #denoising trained on tuh
-    #model_path = '/system/user/studentwork/gutenber/upt-minimal/logs/TUH/UPT4EEG/UPT4EEG_Jan07_11-58-55_val.pth' #denoising trained on random, val on tuh
-    if saved_model_type == 'big_rand':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan18_10-47-07_val.pth' 
-        d_model = 192*4
-        dim = 256   
-        num_heads = 8 #3
-        depth = 6
-    #model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan19_17-49-57_val.pth'  #trained with bin loss!!
-    elif saved_model_type == 'small_tuh':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan19_18-47-03_val.pth'  #small model on tuh
-        d_model = 192*2
-        dim = 192  
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'small_tuh_same':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan23_19-21-01_val.pth'
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'small_rdm_cd_same':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan23_19-11-27_val.pth'
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'small_rdm_cd':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan23_19-12-03_val.pth'
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'small_rdm':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan23_19-12-29_val.pth'
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'small_tuh_train':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan19_18-47-03_train.pth'  #small model on tuh
-        d_model = 192*2
-        dim = 192  
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'small_tuh_same_train':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan23_19-21-01_train.pth'
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'small_rdm_cd_same_train':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan23_19-11-27_train.pth'
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'small_rdm_cd_train':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan23_19-12-03_train.pth'
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'small_rdm_train':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan23_19-12-29_train.pth'
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'ensemble_loss':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan20_17-12-18_val.pth'
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'ensemble_loss_train':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan20_17-12-18_train.pth'
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'bin_loss_tuh':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan30_15-12-47_val.pth'
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'bin_loss_tuh_train':
-        model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan30_15-12-47_train.pth'
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-    elif saved_model_type == 'CLEAN-E1' or saved_model_type == 'CLEAN-E2' or saved_model_type == 'CLEAN-E3' or saved_model_type == 'CLEAN-E4':
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3
-        if saved_model_type == 'CLEAN-E1':
-            model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan31_15-49-07_val.pth'
-        if saved_model_type == 'CLEAN-E2':
-            model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Feb16_12-45-17_val.pth'
-        if saved_model_type == 'CLEAN-E3':
-            model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Feb16_12-46-16_val.pth'
-        elif saved_model_type == 'CLEAN-E4':
-            model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan31_15-50-05_val.pth'
-    elif saved_model_type == 'CLEAN-B0' or saved_model_type == 'CLEAN-B1' or saved_model_type == 'CLEAN-B2' or saved_model_type == 'CLEAN-B3' or saved_model_type == 'CLEAN-B4':
-        d_model = 192*2
-        dim = 192   
-        num_heads = 4 #3
-        depth = 3        
-        if saved_model_type == 'CLEAN-B0':  
-            model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan30_15-12-47_val.pth'
-        if saved_model_type == 'CLEAN-B1':  
-            model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Feb01_14-34-51_val.pth'
-        if saved_model_type == 'CLEAN-B2':  
-            model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan31_09-29-55_val.pth'
-        if saved_model_type == 'CLEAN-B3':  
-            model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan31_15-47-14_val.pth'
-        if saved_model_type == 'CLEAN-B4':  
-            model_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/UPT4EEG_Jan31_15-38-24_val.pth'
-
-
-    #model_path = '/system/user/studentwork/gutenber/upt-minimal/upt-minimal/upt-minimal/logs/TUH/UPT4EEG/UPT4EEG_Dec30_16-14-33_val.pth' #recostruction
-    #'/system/user/studentwork/gutenber/upt-minimal/logs/TUH/UPT4EEG/UPT4EEG_Dec22_10-45-06_val.pth'
-    else:
-        raise Exception("Variable saved_model_type invalid.")
     # hyperparameters
-
-
     num_supernodes = 512
     input_dim = 1
     output_dim = 1
@@ -283,7 +155,7 @@ for subject in cfg_dataset["subjects_test"]:
                 ('C3', 'P3'), ('P3', 'O1'), ('FP2', 'F4'), ('F4', 'C4'),
                 ('C4', 'P4'), ('P4', 'O2')
                 ]
-    query = {'query_freq': 3000.0, 'query_montage_pairs': query_montage_pairs}
+    query = {'query_freq': SFREQ, 'query_montage_pairs': query_montage_pairs}
 
 
     test_dataset = SparseEEGDataset_val(x_test, y_test, query, ch_names, cfg_dataset, use_montage=use_montage)
@@ -306,9 +178,9 @@ for subject in cfg_dataset["subjects_test"]:
 
 
     ################################## EVALUATION METRICS ##########################
-    csv_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/eval_metrics_upt4eeg_' + saved_model_type + '_montage_' + use_montage + '.csv'
-    csv_summary_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/subject_metrics_summary_upt4eeg_' + saved_model_type + '_montage_' + use_montage + '.csv'
-    final_summary_path = '/system/user/studentwork/gutenber/logs/TUH/UPT4EEG/metrics_summary_upt4eeg_'+ saved_model_type + '_montage_' + use_montage + '.csv'
+    csv_path = os.path.join(SAVE_PATH, 'eval_metrics_upt4eeg_' + saved_model_type + '_montage_' + use_montage + '.csv')
+    csv_summary_path = os.path.join(SAVE_PATH, 'subject_metrics_summary_upt4eeg_' + saved_model_type + '_montage_' + use_montage + '.csv')
+    final_summary_path = os.path.join(SAVE_PATH, 'metrics_summary_upt4eeg_'+ saved_model_type + '_montage_' + use_montage + '.csv')
 
     total_updates = len(test_dataloader)
 
