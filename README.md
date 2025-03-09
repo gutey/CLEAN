@@ -38,7 +38,7 @@ To set up the project and install the required dependencies, follow these steps:
 To prepare the data for training and evaluation, follow these steps:
 
 1. **Download EEG data**:
-   Obtain your preferred EEG dataset in .edf format. CLEAN was trained using EEG data from the TUH EEG corpus.
+    Obtain your preferred EEG dataset in .edf format. CLEAN was trained using EEG data from the TUH EEG corpus.
    
 2. **Offline denoising using ICA+ICLabel**:
    Obtain target clean EEG data using the provided MATLAB script [main.m](https://github.com/gutey/CLEAN/data_processing/TUH_TUSZ/main.m)
@@ -47,8 +47,14 @@ To prepare the data for training and evaluation, follow these steps:
    Preferred way, but you can modify the config file if needed.
    ```plaintext
    data/
-   ├── original/        # Preprocessed noisy EEG data
-   └── target/             # Target clean EEG data
+   ├── original/          # Preprocessed noisy EEG data
+   │   ├── Data_S001.set
+   │   ├── Data_S002.set
+   │   ├── ...
+   └── target/            # Target clean EEG data
+       ├── Data_S001_ICA.set
+       ├── Data_S002_ICA.set
+       ├── ...
    ```
 
 ## ▶️ Run the Model
