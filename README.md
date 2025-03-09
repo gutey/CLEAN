@@ -38,29 +38,36 @@ To set up the project and install the required dependencies, follow these steps:
 To prepare the data for training and evaluation, follow these steps:
 
 1. **Download EEG data**:
-   Obtain your preferred EEG dataset in .edf format. CLEAN was trained using EEG data from the TUH EEG corpus.
+    Obtain your preferred EEG dataset in .edf format. CLEAN was trained using EEG data from the TUH EEG corpus.
    
 2. **Offline denoising using ICA+ICLabel**:
-   Obtain target clean EEG data using the provided MATLAB script [main.m](https://github.com/gutey/CLEAN/data_processing/TUH_TUSZ/main.m)
+   Obtain target clean EEG data using the provided MATLAB script [main.m](https://github.com/gutey/CLEAN/blob/main/data_processing/TUH_TUSZ/main.m)
 
 3. **Dataset structure**
    Preferred way, but you can modify the config file if needed.
    ```plaintext
    data/
-   ├── original/        # Preprocessed noisy EEG data
-   └── target/             # Target clean EEG data
+   ├── original/          # Preprocessed noisy EEG data
+   │   ├── Data_S001.set
+   │   ├── Data_S002.set
+   │   ├── ...
+   └── target/            # Target clean EEG data
+       ├── Data_S001_ICA.set
+       ├── Data_S002_ICA.set
+       ├── ...
    ```
 
-## ▶️ Run the Model
+## ▶️ Run CLEAN
 
 To run the model, follow these steps:
 
-1. **Train the model**:
+1. **Adjust config file**: [config.yml](https://github.com/gutey/CLEAN/blob/main/configs/config.yml)
+2. **Train the model**:
    To train the model, use the following command:
    ```bash
-   python main.py --config config.yaml
+   python main.py -c config.yml
    ```
-2. **Evaluate the model**:
+3. **Evaluate the model**:
    After training, you can evaluate the model using the following command:
    ```bash
    python evaluation/inference.py --model checkpoint.pth --test_data test_data/
