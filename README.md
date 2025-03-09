@@ -12,6 +12,8 @@ Therefore, this thesis introduces **CLEAN** – a **ChanneL-** and **frequency-i
 
 Experimental results demonstrate that the model outperforms existing deep learning-based artifact removal methods while offering the added benefits of channel- and frequency-independence.
 
+
+![Model Architecture](assets/pipeline.png)
 ---
 
 ## 🛠️ Setup
