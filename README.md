@@ -65,7 +65,7 @@ To run the model, follow these steps:
 2. **Train the model**:
    To train the model, use the following command:
    ```bash
-   python main.py -c configs/config.yml
+   python main.py -c configs/config.yml -s logs/TUH/CLEAN
    ```
 3. **Evaluate the model**:
    After training, you can evaluate the model using the following command:
