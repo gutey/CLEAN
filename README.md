@@ -65,13 +65,18 @@ To run the model, follow these steps:
 2. **Train the model**:
    To train the model, use the following command:
    ```bash
-   python main.py -c config.yml
+   python main.py -c configs/config.yml
    ```
 3. **Evaluate the model**:
    After training, you can evaluate the model using the following command:
    ```bash
-   python evaluation/inference.py --model checkpoint.pth --test_data test_data/
+   python evaluation/inference.py --model checkpoint.pth --config configs/config.yml --use_montage random 
    ```
+   You can optionally specify the save path and model name by using:
+   ```bash
+   python evaluation/inference.py --model checkpoint.pth --config configs/config.yml --use_montage random --save_path [path] --save_model_name [model_name]
+   ```
+   
    
 
 
