@@ -57,16 +57,17 @@ To prepare the data for training and evaluation, follow these steps:
        ├── ...
    ```
 
-## ▶️ Run the Model
+## ▶️ Run CLEAN
 
 To run the model, follow these steps:
 
-1. **Train the model**:
+1. **Adjust config file**: [config.yml](https://github.com/gutey/CLEAN/configs/config.yml)
+2. **Train the model**:
    To train the model, use the following command:
    ```bash
-   python main.py --config config.yaml
+   python main.py -c config.yml
    ```
-2. **Evaluate the model**:
+3. **Evaluate the model**:
    After training, you can evaluate the model using the following command:
    ```bash
    python evaluation/inference.py --model checkpoint.pth --test_data test_data/
