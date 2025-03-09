@@ -72,11 +72,11 @@ To run the model, follow these steps:
 4. **Evaluate the model**:
    After training, you can evaluate the model using the following command:
    ```bash
-   python CLEAN/evaluation/inference.py --model checkpoint.pth --config configs/config.yml --use_montage random 
+   python CLEAN/evaluation/inference.py --model weights/CLEAN_ensemble_rand.pth --config configs/config.yml --use_montage random 
    ```
    You can optionally specify the save path and model name by using:
    ```bash
-   python CLEAN/evaluation/inference.py --model checkpoint.pth --config configs/config.yml --use_montage random --save_path [path] --save_model_name [model_name]
+   python CLEAN/evaluation/inference.py --model weights/CLEAN_ensemble_rand.pth --config configs/config.yml --use_montage random --save_path [path] --save_model_name [model_name]
    ```
 
    **Note:** The `use_montage` argument can be set to one of the following options:
