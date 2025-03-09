@@ -2,6 +2,9 @@
 
 This repository contains the code for the **Channel- and Frequency-Invariant EEG Artifact Removal Transformer (CLEAN)**, a deep learning-based method for removing artifacts from EEG signals. The approach is designed to be flexible with respect to input channel configurations and sampling frequencies, making it adaptable to a wide range of EEG datasets and downstream tasks.
 
+> **Note:** In some parts of the code or documentation, you might encounter the term **UPT4EEG**. This was the previous name for **CLEAN** and can be considered equivalent.
+
+
 ## 📖 Abstract
 Electroencephalography (EEG) is a widely used method for recording brain activity, but it is highly susceptible to artifacts. This makes artifact removal essential for reliable downstream tasks such as epileptic seizure detection or Brain-Computer Interface (BCI). However, existing artifact removal methods are often inflexible with respect to input channel configurations and sampling frequencies, limiting their adaptability and range of application. 
 
@@ -44,6 +47,8 @@ To run the model, follow these steps:
    ```bash
    python evaluation/inference.py --model checkpoint.pth --test_data test_data/
    ```
+   
+
 
 ## 📄 License
 
