@@ -41,11 +41,13 @@ parser = argparse.ArgumentParser(description="Main UPT4EEG training script.")
 
 # Define the argument
 parser.add_argument('-c', '--config', type=str, help="Config file (.yml): relative path in working directory.")
+parser.add_argument('-s', '--save', type=str, default='logs/TUH/CLEAN', help="Save path for model checkpoint.")
 
 # Parse the arguments
 args = parser.parse_args()
 
 config_file = args.config
+SAVE_PATH = args.save
 
 config_path = os.path.join(os.getcwd(), config_file)
 #config_path = '/system/user/studentwork/gutenber/configs/config.yml'
@@ -73,8 +75,6 @@ if loss_fun == 'bin':
     from CLEAN.utils.train_bin import Trainer
 elif loss_fun == 'ensemble':
     from CLEAN.utils.train_ensemble import Trainer
-
-SAVE_PATH = 'logs/' + DATASET + '/' + MODEL_CLASS
 
 if not os.path.exists(SAVE_PATH):
     try:
